@@ -28,7 +28,7 @@
   "scripts": {
     "server": "npx json-server public/db.json --watch --port=3001",
     "start": "react-scripts start",
-    "build": "react-scripts build react-snap",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
