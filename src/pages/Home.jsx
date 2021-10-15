@@ -4,6 +4,7 @@ import "../scss/app.scss";
 import "../scss/_variables.scss";
 import Header from "../components/Header1";
 import PizzaBlock from "../components/PizzaBlock";
+import PizzaLoadingBlock from "../components/PizzaBlock/PizzaLoadingBlock.jsx";
 import { useSelector, useDispatch } from "react-redux";
 import { setCategory } from "../redux/actions/filters";
 import { fetchPizzas } from "../redux/actions/pizzas";
@@ -14,15 +15,19 @@ const sortItems = [
   { name: "Алфавиту", type: "alphabet" },
 ];
 function Dome() {
-  
+  const items = useSelector(({ pizzas }) => pizzas.items)
+  const isLoaded = useSelector(({ pizzas }) => pizzas.isLoaded)
+  const {category, sortBy} = useSelector(({ filters }) => filters)
 
-  
+  React.useEffect(() => {
+    dispatch(fetchPizzas())
+  }, [category]);
   const dispatch = useDispatch();
   
   React.useEffect(() => {
     if(!items.length){dispatch(fetchPizzas())}
   }, []);
-  const items = useSelector(({ pizzas }) => pizzas.items);
+  
   const onSelectCategory = React.useCallback((index) => {
     dispatch(setCategory(index));
   }, []);
@@ -39,8 +44,9 @@ function Dome() {
             </div>
             <h2 className="content__title">Все</h2>
             <div className="content__items">
-              {items &&
-                items.map((obj) => <PizzaBlock key={obj.id} {...obj} />)}
+              {isLoaded ?
+                Array(10).fill(<PizzaLoadingBlock/>) :items.map((obj) => <PizzaBlock key={obj.id} isLoading={true}   {...obj} />) }
+                
             </div>
           </div>
         </div>
